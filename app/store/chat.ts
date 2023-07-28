@@ -9,8 +9,8 @@ import { ModelConfig, ModelType, useAppConfig } from "./config";
 import { createEmptyMask, Mask } from "./mask";
 import {
   DEFAULT_INPUT_TEMPLATE,
-  DEFAULT_SYSTEM_TEMPLATE,
   StoreKey,
+  getMeta,
 } from "../constant";
 import { api, RequestMessage } from "../client/api";
 import { ChatControllerPool } from "../client/controller";
@@ -184,7 +184,6 @@ export const useChatStore = create<ChatStore>()(
         if (mask) {
           const config = useAppConfig.getState();
           const globalModelConfig = config.modelConfig;
-
           session.mask = {
             ...mask,
             modelConfig: {
@@ -194,6 +193,21 @@ export const useChatStore = create<ChatStore>()(
           };
           session.topic = mask.name;
         }
+        // const meta = getMeta(window.location.href);
+        // const finalMask = meta.mask ?? mask;
+        // if (!!finalMask) {
+        //   const config = useAppConfig.getState();
+        //   const globalModelConfig = config.modelConfig;
+        //   session.mask = {
+        //     ...mask,
+        //     modelConfig: {
+        //       ...globalModelConfig,
+        //       ...finalMask.modelConfig,
+        //     },
+        //   } as any;
+        //   console.log('session.mask: ', session.mask)
+        //   session.topic = finalMask.name;
+        // }
 
         set((state) => ({
           currentSessionIndex: 0,
@@ -387,16 +401,17 @@ export const useChatStore = create<ChatStore>()(
 
         // system prompts, to get close to OpenAI Web ChatGPT
         const shouldInjectSystemPrompts = modelConfig.enableInjectSystemPrompts;
+        const meta = getMeta(window.location.href);
         const systemPrompts = shouldInjectSystemPrompts
           ? [
-              createMessage({
-                role: "system",
-                content: fillTemplateWith("", {
-                  ...modelConfig,
-                  template: DEFAULT_SYSTEM_TEMPLATE,
-                }),
+            createMessage({
+              role: "system",
+              content: fillTemplateWith("", {
+                ...modelConfig,
+                template: meta.defautMessage,
               }),
-            ]
+            }),
+          ]
           : [];
         if (shouldInjectSystemPrompts) {
           console.log(
@@ -504,8 +519,8 @@ export const useChatStore = create<ChatStore>()(
             onFinish(message) {
               get().updateCurrentSession(
                 (session) =>
-                  (session.topic =
-                    message.length > 0 ? trimTopic(message) : DEFAULT_TOPIC),
+                (session.topic =
+                  message.length > 0 ? trimTopic(message) : DEFAULT_TOPIC),
               );
             },
           });

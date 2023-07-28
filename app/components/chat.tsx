@@ -852,10 +852,11 @@ export function Chat() {
       },
     });
   };
+  console.log('session: ', session);
 
   const context: RenderMessage[] = session.mask.hideContext
     ? []
-    : session.mask.context.slice();
+    : session.mask.context?.slice();
 
   const accessStore = useAccessStore();
 
@@ -882,27 +883,27 @@ export function Chat() {
     .concat(
       isLoading
         ? [
-            {
-              ...createMessage({
-                role: "assistant",
-                content: "……",
-              }),
-              preview: true,
-            },
-          ]
+          {
+            ...createMessage({
+              role: "assistant",
+              content: "……",
+            }),
+            preview: true,
+          },
+        ]
         : [],
     )
     .concat(
       userInput.length > 0 && config.sendPreviewBubble
         ? [
-            {
-              ...createMessage({
-                role: "user",
-                content: userInput,
-              }),
-              preview: true,
-            },
-          ]
+          {
+            ...createMessage({
+              role: "user",
+              content: userInput,
+            }),
+            preview: true,
+          },
+        ]
         : [],
     );
 
@@ -941,7 +942,7 @@ export function Chat() {
         if (payload.key || payload.url) {
           showConfirm(
             Locale.URLCommand.Settings +
-              `\n${JSON.stringify(payload, null, 4)}`,
+            `\n${JSON.stringify(payload, null, 4)}`,
           ).then((res) => {
             if (!res) return;
             if (payload.key) {
