@@ -182,7 +182,7 @@ export const useChatStore = create<ChatStore>()(
       newSession(mask) {
         const session = createEmptySession();
 
-        if (!!mask) {
+        if (mask) {
           const config = useAppConfig.getState();
           const globalModelConfig = config.modelConfig;
           session.mask = {
@@ -191,8 +191,7 @@ export const useChatStore = create<ChatStore>()(
               ...globalModelConfig,
               ...mask.modelConfig,
             },
-          } as any;
-          console.log('session.mask: ', session.mask)
+          };
           session.topic = mask.name;
         }
         // const meta = getMeta(window.location.href);
