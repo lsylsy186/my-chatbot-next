@@ -62,7 +62,7 @@ export const metaConfig: IMeta = {
   },
   [ENVS.despicable]: {
     title: 'ChatGPT 国粹版',
-    description: '锻炼你的辩论能力和心理素质.',
+    description: '用于解压和锻炼你的心理素质，慎用',
     mask: despicableMask,
     defautMessage: despicableMaskDefaultMessage
   }
