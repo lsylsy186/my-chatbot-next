@@ -9,7 +9,6 @@ import { ModelConfig, ModelType, useAppConfig } from "./config";
 import { createEmptyMask, Mask } from "./mask";
 import {
   DEFAULT_INPUT_TEMPLATE,
-  DEFAULT_SYSTEM_TEMPLATE,
   StoreKey,
   getMeta,
 } from "../constant";
@@ -402,13 +401,14 @@ export const useChatStore = create<ChatStore>()(
 
         // system prompts, to get close to OpenAI Web ChatGPT
         const shouldInjectSystemPrompts = modelConfig.enableInjectSystemPrompts;
+        const meta = getMeta(window.location.href);
         const systemPrompts = shouldInjectSystemPrompts
           ? [
             createMessage({
               role: "system",
               content: fillTemplateWith("", {
                 ...modelConfig,
-                template: DEFAULT_SYSTEM_TEMPLATE,
+                template: meta.defautMessage,
               }),
             }),
           ]
